@@ -1,87 +1,125 @@
-# Customer Churn Prediction
+Customer Churn Prediction (Telecom)
+Overview
 
-End-to-end machine learning project to predict customer churn using the Telco Customer Churn dataset.
-The project focuses on clean preprocessing, proper model validation, and reproducible training.
+This project implements an end-to-end machine learning pipeline to predict customer churn for a telecom business. The goal is to identify customers who are likely to leave the service so that retention efforts can be targeted effectively, rather than applied uniformly across the customer base.
 
----
+The project emphasizes:
 
-## Problem Statement
+Handling imbalanced classification problems
 
-Customer churn is a critical business problem where retaining existing customers is more cost-effective
-than acquiring new ones. The objective of this project is to predict whether a customer will churn
-based on demographic, account, and service usage information.
+Proper model validation and comparison
 
----
+Reproducible and modular training code suitable for extension
 
-## Dataset
+Problem Statement
 
-- Source: Telco Customer Churn Dataset
-- Rows: ~7,000 customers
-- Target variable: `Churn` (Yes / No)
+Customer churn has a direct impact on revenue and customer lifetime value in subscription-based businesses. Instead of reacting after customers leave, businesses benefit from predicting churn in advance and intervening with targeted retention strategies.
 
----
+The objective of this project is to build a binary classification model that predicts whether a customer will churn based on demographic, account, and service usage information. Model performance is evaluated primarily using ROC-AUC to account for class imbalance.
 
-## Project Structure
+Dataset
 
+Source: IBM Telco Customer Churn Dataset (public dataset)
+
+Observations: 7,043 customers
+
+Target Variable: Churn (Yes / No)
+
+Feature Types:
+
+Demographic information
+
+Account and contract details
+
+Service usage indicators
+
+Basic data cleaning was required to handle missing values and inconsistent data types.
+
+Project Structure
 customer-churn-prediction/
 ├── data/
-│ ├── raw/
-│ │ └── telco_churn.csv
-│ └── processed/
+│   ├── raw/
+│   │   └── telco_churn.csv
+│   └── processed/
 ├── models/
-│ └── churn_model.pkl
+│   └── churn_model.pkl
 ├── notebooks/
-│ └── eda.ipynb
+│   └── eda.ipynb
 ├── src/
-│ ├── preprocessing.py
-│ ├── train.py
-│ └── save_model.py
+│   ├── preprocessing.py
+│   ├── train.py
+│   └── save_model.py
 ├── README.md
 ├── requirements.txt
 └── .gitignore
 
 
----
+The project is organized to separate exploratory analysis, preprocessing, training, and model persistence, enabling reproducibility and easier maintenance.
 
-## Approach
+Approach
 
-1. Data cleaning and preprocessing
-2. Exploratory Data Analysis (EDA)
-3. Feature encoding using one-hot encoding
-4. Model training with train-test split
-5. Model optimization using cross-validation and hyperparameter tuning
-6. Model selection based on ROC-AUC
-7. Saving the best-performing model for inference
+Data Cleaning & Preprocessing
 
----
+Handled missing values and invalid entries
 
-## Model Optimization & Validation
+Converted categorical variables into numerical form using one-hot encoding
 
-To ensure reliable performance, Stratified 5-Fold Cross-Validation was applied
-along with GridSearchCV for hyperparameter tuning.
+Exploratory Data Analysis (EDA)
 
-**Evaluation metric:** ROC-AUC (chosen due to class imbalance)
+Analyzed churn distribution and key feature relationships
 
-| Model | CV ROC-AUC | Test ROC-AUC |
-|------|-----------|--------------|
-| Logistic Regression | 0.81 | 0.79 |
-| Random Forest (Tuned) | **0.84** | **0.82** |
+Identified patterns related to contract type, tenure, and service usage
 
-The tuned Random Forest model achieved the best generalization performance
-and was persisted for downstream inference.
+Model Training
 
----
+Applied a stratified train-test split to preserve class distribution
 
-## How to Run
+Trained baseline and ensemble models for comparison
 
-```bash
-# create virtual environment
-python -m venv venv
-source venv/bin/activate
+Model Optimization & Validation
 
-# install dependencies
+Used Stratified 5-Fold Cross-Validation
+
+Performed hyperparameter tuning with GridSearchCV
+
+Selected models based on ROC-AUC due to class imbalance
+
+Model Persistence
+
+Saved the best-performing model for reuse in downstream inference workflows
+
+Model Evaluation
+
+Primary Metric: ROC-AUC (chosen due to class imbalance)
+
+Model	CV ROC-AUC	Test ROC-AUC
+Logistic Regression	0.81	0.79
+Random Forest (Tuned)	0.84	0.82
+
+The tuned Random Forest model demonstrated stronger generalization performance across both cross-validation and held-out test data and was selected as the final model.
+
+Limitations
+
+The dataset represents a single historical snapshot and does not capture temporal churn behavior.
+
+The model does not incorporate cost-sensitive learning, where false negatives may be more expensive than false positives.
+
+Results may not generalize to other telecom markets without retraining and validation.
+
+Future Improvements
+
+Introduce time-based validation to better simulate real-world deployment.
+
+Explore advanced imbalance handling techniques such as class-weighted loss functions.
+
+Deploy the model via a REST API for real-time inference.
+
+Perform feature importance analysis to improve business interpretability.
+
+How to Run
 pip install -r requirements.txt
+python src/train.py
 
-# train model and save best version
-python -m src.save_model
+Key Takeaway
 
+This project demonstrates a complete and reproducible machine learning workflow for churn prediction, with a focus on proper validation, model comparison, and practical deployment considerations rather than model complexity alone.
